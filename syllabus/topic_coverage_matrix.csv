@@ -1,0 +1,31 @@
+Topic_ID,Domain_Unit,Official_Question_Weightage,Practice_Weightage,Study_Material_Status,Mock_Test_Coverage_200_Tests,Validation_Status
+GK-01,National Current Affairs,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+GK-02,State Current Affairs,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+GK-03,Polity & Governance,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+GK-04,Geography & Environment,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+GK-05,General Science & Tech,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PIE-01,History of Education,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PIE-02,Post-Independence Policies,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PIE-03,Teacher Empowerment & Bodies,2 Qs,1 Qs,Fully Covered (OER & Notes),200 Qs,Verified
+PIE-04,Acts and Child Rights,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PIE-05,Curriculum & School Schemes,6 Qs,3 Qs,Fully Covered (OER & Notes),600 Qs,Verified
+MATH-01,Number Systems,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-02,"Sets, Relations & Functions",6 Qs,3 Qs,Fully Covered (OER & Notes),600 Qs,Verified
+MATH-03,Commercial Mathematics,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-04,Algebra & Linear Equations,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-05,Quadratic Equations & Binomial,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-06,Progressions,6 Qs,3 Qs,Fully Covered (OER & Notes),600 Qs,Verified
+MATH-07,Geometry,10 Qs,5 Qs,Fully Covered (OER & Notes),1000 Qs,Verified
+MATH-08,Mensuration,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-09,Trigonometry,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-10,Analytical Geometry,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-11,Matrices & Determinants,6 Qs,3 Qs,Fully Covered (OER & Notes),600 Qs,Verified
+MATH-12,Statistics & Probability,8 Qs,4 Qs,Fully Covered (OER & Notes),800 Qs,Verified
+MATH-13,Computing Fundamentals,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PED-01,Nature of Mathematics,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PED-02,Aims & Objectives,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PED-03,Teaching Methods,6 Qs,3 Qs,Fully Covered (OER & Notes),600 Qs,Verified
+PED-04,Instructional Planning,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PED-05,Learning Resources & Aids,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PED-06,Diverse Learners & Remedial,4 Qs,2 Qs,Fully Covered (OER & Notes),400 Qs,Verified
+PED-07,Evaluation & Testing,6 Qs,3 Qs,Fully Covered (OER & Notes),600 Qs,Verified

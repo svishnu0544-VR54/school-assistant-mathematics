@@ -1,0 +1,29 @@
+{
+  "DISC-01": {
+    "status": 200,
+    "links": [
+      "https://www.sakshieducation.com/ap-dsc",
+      "https://www.sakshieducation.com/dsc",
+      "https://education.sakshi.com/entrance-exams/education-news/tg-cpget-2026-results-be-declared-3pm-today-download-direct-link-details-telugu-197879",
+      "https://education.sakshi.com/current-affairs/daily-current-affairs/current-affairs-2025-year-book-telugu-medium-pdf-sakshi-education-news-telugu-187930"
+    ]
+  },
+  "DISC-02": {
+    "status": 200,
+    "links": [
+      "https://www.sakshieducation.com/ap-dsc",
+      "https://www.sakshieducation.com/dsc",
+      "https://education.sakshi.com/entrance-exams/education-news/tg-cpget-2026-results-be-declared-3pm-today-download-direct-link-details-telugu-197879",
+      "https://education.sakshi.com/current-affairs/daily-current-affairs/current-affairs-2025-year-book-telugu-medium-pdf-sakshi-education-news-telugu-187930"
+    ]
+  },
+  "DISC-03": {
+    "status": 200,
+    "links": []
+  },
+  "DISC-04": {
+    "status": "ERROR",
+    "error": "('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))",
+    "links": []
+  }
+}

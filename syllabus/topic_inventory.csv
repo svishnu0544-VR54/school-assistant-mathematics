@@ -1,0 +1,31 @@
+Topic_ID,Section,Domain_Unit,Subtopic_Details,Practice_Questions_Per_Test,Primary_Reference_Sources
+GK-01,General Knowledge & Current Affairs,National Current Affairs,"National events, policies, summits, appointments",2,"GK Notes, Yearbooks"
+GK-02,General Knowledge & Current Affairs,State Current Affairs,"Telangana & AP regional welfare schemes, developments",2,"State Gazette, Portal Reports"
+GK-03,General Knowledge & Current Affairs,Polity & Governance,"Indian Constitution, Fundamental Rights, Panchayati Raj",2,NCERT Class 11 Political Science
+GK-04,General Knowledge & Current Affairs,Geography & Environment,"Physiography, rivers, climate, biodiversity, disasters",2,NCERT Geography Class 9-11
+GK-05,General Knowledge & Current Affairs,General Science & Tech,"ISRO missions, defense tech, everyday scientific phenomena",2,NCERT Science & Tech Summaries
+PIE-01,Perspectives in Education,History of Education,"British era commissions: Wood Despatch, Hunter, Hartog, Sargent",2,"Govt Reports, Education Commissions"
+PIE-02,Perspectives in Education,Post-Independence Policies,"Radhakrishnan, Mudaliar, Kothari, NPE 1986, NEP 2020",2,MHRD/MoE Policy Documents
+PIE-03,Perspectives in Education,Teacher Empowerment & Bodies,"Professional ethics, NCERT, NCTE, SCERT, DIET roles",1,"NCTE Regulations, Teacher Codes"
+PIE-04,Perspectives in Education,Acts and Child Rights,"RTE Act 2009 provisions, RTI Act 2005, POCSO, UNCRC",2,Gazette of India: RTE Act 2009
+PIE-05,Perspectives in Education,Curriculum & School Schemes,"NCF 2005 principles, Samagra Shiksha, MDM/PM POSHAN, CCE",3,"NCERT NCF-2005, SCERT Guidelines"
+MATH-01,Mathematics Content,Number Systems,"Real numbers, Euclid lemma, Surds, Logarithms, Complex Numbers",4,"NCERT Class 9, 10, 11 Math"
+MATH-02,Mathematics Content,"Sets, Relations & Functions","Set operations, Venn diagrams, Relations, Functions, Inverses",3,NCERT Class 11 Math Chapter 1-2
+MATH-03,Mathematics Content,Commercial Mathematics,"Ratios, Percentages, Profit-Loss, CI/SI, Time & Work, Speed",4,"NCERT Class 8, State Board Maths"
+MATH-04,Mathematics Content,Algebra & Linear Equations,"Polynomials, Linear equations (2 vars), Remainder/Factor theorem",4,NCERT Class 9-10 Math
+MATH-05,Mathematics Content,Quadratic Equations & Binomial,"Quadratic formula, Roots nature, Binomial theorem expansions",4,NCERT Class 10-11 Math
+MATH-06,Mathematics Content,Progressions,"Arithmetic, Geometric, Harmonic progressions and means",3,NCERT Class 10-11 Math
+MATH-07,Mathematics Content,Geometry,"Euclidean theorems, Triangles, Similarity, Pythagoras, Circles",5,NCERT Class 9-10 Math Geometry
+MATH-08,Mathematics Content,Mensuration,"2D areas/perimeters, 3D surface area & volumes of solids",4,NCERT Class 9-10 Mensuration
+MATH-09,Mathematics Content,Trigonometry,"Ratios, Identities, Heights & Distances, Multiple angles, Inverses",4,NCERT Class 10-11 Trigonometry
+MATH-10,Mathematics Content,Analytical Geometry,"Coordinate geometry, Straight lines, Conic sections (Parabola/Ellipse)",4,NCERT Class 10-11 Coordinate Geometry
+MATH-11,Mathematics Content,Matrices & Determinants,"Matrix types, Operations, Determinants, Inverses, Cramers rule",3,NCERT Class 12 Math Part 1
+MATH-12,Mathematics Content,Statistics & Probability,"Central tendency, Dispersion, Permutations, Probability, Distributions",4,NCERT Class 9-11 Statistics & Prob
+MATH-13,Mathematics Content,Computing Fundamentals,"Binary systems, Logic, Flowcharts, Algorithms, Pseudocode",2,SCERT & CBSE Computer Science
+PED-01,Teaching Methodology,Nature of Mathematics,"Characteristics, Logical structure, Ramanujan, Aryabhata, Euclid",2,"B.Ed Mathematics Pedagogy, IGNOU"
+PED-02,Teaching Methodology,Aims & Objectives,"Bloom taxonomy (Cognitive, Affective, Psychomotor), Learning outcomes",2,Bloom & Krathwohl Framework
+PED-03,Teaching Methodology,Teaching Methods,"Inductive-Deductive, Analytic-Synthetic, Heuristic, Problem Solving, Project",3,Pedagogy of Mathematics B.Ed
+PED-04,Teaching Methodology,Instructional Planning,"Year plan, Unit plan, Lesson plan (Herbartian, 5E Constructivist)",2,Teacher Training Manuals
+PED-05,Teaching Methodology,Learning Resources & Aids,"Dales Cone of Experience, Math Lab, GeoGebra, Textbooks, Clubs",2,"Edgar Dale OER, SCERT Lab Manuals"
+PED-06,Teaching Methodology,Diverse Learners & Remedial,"Gifted students, Slow learners, Dyscalculia, Diagnostic & Remedial",2,Inclusive Education Handbooks
+PED-07,Teaching Methodology,Evaluation & Testing,"CCE, Blueprints, Achievement tests, Reliability, Validity, Rubrics",3,SCERT CCE Evaluation Manuals
