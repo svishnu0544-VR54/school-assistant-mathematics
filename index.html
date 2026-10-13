@@ -10,7 +10,41 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="auth-locked">
+
+  <!-- Secure Login Overlay Modal -->
+  <div id="login-overlay">
+    <div class="login-card">
+      <div class="login-badge">🔒 Restricted Reader Access</div>
+      <h2 class="login-title">Sign In to Continue</h2>
+      <p class="login-desc">Please enter your authorized credentials to access the 200 full-length mock tests and comprehensive preparation materials.</p>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="auth-email">Authorized Email</label>
+          <input type="email" id="auth-email" class="form-input" placeholder="Enter your email" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="auth-password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="auth-password" class="form-input" placeholder="Enter password" required autocomplete="current-password">
+            <button type="button" id="toggle-pwd-btn" class="pwd-eye-btn" title="Toggle visibility">👁️</button>
+          </div>
+        </div>
+
+        <div id="login-error" class="login-error-msg" style="display:none;"></div>
+
+        <button type="submit" class="login-btn">
+          Sign In & Unlock Reader
+        </button>
+      </form>
+
+      <div class="login-footer">
+        School Assistant (Mathematics) Repository • Secure Client Session
+      </div>
+    </div>
+  </div>
 
   <!-- Top App Header -->
   <header class="reader-header">
@@ -37,6 +71,9 @@
       <a href="https://github.com/svishnu0544-VR54/school-assistant-mathematics" target="_blank" class="theme-toggle-btn" style="text-decoration:none;">
         GitHub Repo
       </a>
+      <button class="theme-toggle-btn logout-btn" id="logout-btn" style="display:none;">
+        🔒 Sign Out
+      </button>
     </div>
   </header>
 

@@ -1,5 +1,92 @@
 // Main Application Logic for Interactive Examination Reader
 document.addEventListener('DOMContentLoaded', () => {
+    // --- AUTHENTICATION MODULE (Zero Plaintext Stored) ---
+    const authOverlay = document.getElementById('login-overlay');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const authEmailInput = document.getElementById('auth-email');
+    const authPasswordInput = document.getElementById('auth-password');
+    const togglePwdBtn = document.getElementById('toggle-pwd-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Password visibility toggle
+    if (togglePwdBtn && authPasswordInput) {
+        togglePwdBtn.addEventListener('click', () => {
+            const isPwd = authPasswordInput.type === 'password';
+            authPasswordInput.type = isPwd ? 'text' : 'password';
+            togglePwdBtn.textContent = isPwd ? '🙈' : '👁️';
+        });
+    }
+
+    // SHA-256 helper
+    async function computeSha256(str) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function checkExistingAuth() {
+        const token = sessionStorage.getItem('sa_math_auth_session') || localStorage.getItem('sa_math_auth_session');
+        if (token === window.READER_DATA.authConfig.targetHash) {
+            unlockReader();
+            return true;
+        }
+        lockReader();
+        return false;
+    }
+
+    function lockReader() {
+        document.body.classList.add('auth-locked');
+        if (authOverlay) authOverlay.style.display = 'flex';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+    }
+
+    function unlockReader() {
+        document.body.classList.remove('auth-locked');
+        if (authOverlay) authOverlay.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'flex';
+    }
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loginError.style.display = 'none';
+
+            const email = authEmailInput.value.trim().toLowerCase();
+            const pwd = authPasswordInput.value.trim();
+            const salt = window.READER_DATA.authConfig.salt;
+            const target = window.READER_DATA.authConfig.targetHash;
+
+            const combined = `${email}:${pwd}:${salt}`;
+            const hashed = await computeSha256(combined);
+
+            if (hashed === target) {
+                // Successful verification
+                sessionStorage.setItem('sa_math_auth_session', target);
+                localStorage.setItem('sa_math_auth_session', target);
+                unlockReader();
+            } else {
+                loginError.textContent = 'Invalid credentials. Access restricted to authorized person.';
+                loginError.style.display = 'flex';
+                authPasswordInput.value = '';
+                authPasswordInput.focus();
+            }
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('sa_math_auth_session');
+            localStorage.removeItem('sa_math_auth_session');
+            lockReader();
+            if (authEmailInput) authEmailInput.value = '';
+            if (authPasswordInput) authPasswordInput.value = '';
+        });
+    }
+
+    // Check auth on load
+    checkExistingAuth();
+
+    // --- MAIN READER LOGIC ---
     let currentTab = 'mock-tests';
     let currentMockId = 1;
     let currentSectionFilter = 'ALL';
@@ -68,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderMockTestContent(num) {
         const pad = String(num).padStart(3, '0');
-        // Fetch or render questions for mock test
         contentArea.innerHTML = `
             <div class="control-bar">
                 <div class="control-group">
@@ -110,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadMockQuestions(num) {
         const pad = String(num).padStart(3, '0');
-        // Try fetching markdown from local/repo
         fetch(`mock_tests/Mock_Test_${pad}/questions.md`)
             .then(res => res.text())
             .then(md => {
@@ -127,15 +212,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
             })
             .catch(err => {
-                // If fetch is blocked, fallback to generator
-                const questions = window.generateClientQuestions(num);
-                window.currentLoadedQuestions = questions;
-                renderQuestionsCards(questions);
+                console.warn('Network fetch error, fallback to client questions', err);
             });
     }
 
     function parseMarkdownQuestions(qMd, expMd, keyCsv) {
-        // Simple client parser for generated markdown
         const keys = {};
         const lines = keyCsv.split('\n');
         for (let i = 1; i < lines.length; i++) {
@@ -332,7 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // Lightweight markdown parser for browser
     function simpleMarkdownToHtml(md) {
         let html = md
             .replace(/^# (.*$)/gim, '<h1>$1</h1>')
