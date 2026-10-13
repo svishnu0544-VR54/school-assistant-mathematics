@@ -1,26 +1,20 @@
 """
-Build script for Modern Interactive Web Reader (GitHub Pages) with Secure Login Gate.
+Build script for Modern Interactive Web Reader (GitHub Pages).
 Generates index.html, styles.css, app.js, and data.js.
 Ensures 100% offline and GitHub Pages compatibility.
-Zero plaintext credentials exposed in repository code.
 """
 
 import os
 import json
 import glob
-import hashlib
 
 BASE_DIR = r"c:\Users\racha\Downloads\SA resources\school-assistant-mathematics-preparation"
 SR_DIR = os.path.join(BASE_DIR, "study_resources")
 SYL_DIR = os.path.join(BASE_DIR, "syllabus")
 PYP_DIR = os.path.join(BASE_DIR, "previous_year_papers")
 
-# Salt and precomputed one-way cryptographic hash digest
-SALT = "SA_MATH_2026_SECURE_SALT_v1"
-CREDENTIAL_HASH = "b12a78c9dc0ff9b1bc8b5dd8c118475d8421fdd34b937bf1401cbc5b3ad584d7"
-
 def main():
-    print("Building web reader application with secure authentication...")
+    print("Building web reader application...")
 
     # 1. Collect study resources
     study_resources = {}
@@ -48,16 +42,12 @@ def main():
 window.READER_DATA = {{
     studyResources: {json.dumps(study_resources, indent=2)},
     syllabusTranscription: {json.dumps(syl_trans)},
-    pastPapers: {json.dumps(past_papers, indent=2)},
-    authConfig: {{
-        salt: "{SALT}",
-        targetHash: "{CREDENTIAL_HASH}"
-    }}
+    pastPapers: {json.dumps(past_papers, indent=2)}
 }};
 """
     with open(os.path.join(BASE_DIR, "data.js"), "w", encoding="utf-8") as f:
         f.write(data_js_content)
-    print(f"data.js written with credentials hash (no plaintext).")
+    print("data.js written.")
 
     # Write styles.css
     css_content = """/* Modern Interactive Reader Design System */
@@ -126,13 +116,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-body.auth-locked .main-layout,
-body.auth-locked .reader-header {
-  filter: blur(14px);
-  pointer-events: none;
-  user-select: none;
 }
 
 /* Header */
@@ -244,15 +227,6 @@ body.auth-locked .reader-header {
   background: rgba(255, 255, 255, 0.08);
 }
 
-.logout-btn {
-  background: rgba(244, 63, 94, 0.15);
-  border: 1px solid rgba(244, 63, 94, 0.4);
-  color: #fb7185;
-}
-
-.logout-btn:hover {
-  background: rgba(244, 63, 94, 0.25);
-}
 
 /* Layout Container */
 .main-layout {
@@ -493,260 +467,19 @@ body.auth-locked .reader-header {
 .markdown-view th, .markdown-view td { padding: 10px 14px; border: 1px solid var(--border-color); }
 .markdown-view th { background: var(--bg-secondary); font-weight: 600; }
 
-/* -------------------------------------------------------------
-   LOGIN GATE OVERLAY & MODAL
-------------------------------------------------------------- */
-#login-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(10, 15, 29, 0.94);
-  backdrop-filter: blur(28px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.login-card {
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 440px;
-  width: 100%;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-  position: relative;
-  overflow: hidden;
-}
-
-.login-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--gradient-brand);
-}
-
-.login-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(59, 130, 246, 0.12);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  padding: 5px 12px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.login-title {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #ffffff;
-}
-
-.login-desc {
-  font-size: 13.5px;
-  color: var(--text-secondary);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-
-.form-group {
-  margin-bottom: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.form-input {
-  background: #1a2438;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  padding: 12px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s ease;
-  width: 100%;
-}
-
-.form-input:focus {
-  border-color: #3b82f6;
-  background: #202d46;
-}
-
-.password-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.pwd-eye-btn {
-  position: absolute;
-  right: 12px;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-}
-
-.login-error-msg {
-  background: rgba(244, 63, 94, 0.12);
-  border: 1px solid rgba(244, 63, 94, 0.3);
-  color: #fb7185;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.login-btn {
-  width: 100%;
-  padding: 13px;
-  border-radius: 10px;
-  background: var(--gradient-brand);
-  border: none;
-  color: #ffffff;
-  font-family: var(--font-heading);
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
-}
-
-.login-btn:hover {
-  opacity: 0.94;
-  transform: translateY(-1px);
-}
-
-.login-footer {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 11.5px;
-  color: var(--text-muted);
-}
-
 @media (max-width: 900px) {
   .main-layout { flex-direction: column; }
   .reader-sidebar { width: 100%; position: static; max-height: none; }
   .content-area { padding: 20px 16px; }
-  .login-card { padding: 28px 20px; }
 }
 """
     with open(os.path.join(BASE_DIR, "styles.css"), "w", encoding="utf-8") as f:
         f.write(css_content)
-    print("styles.css written with login styles.")
+    print("styles.css written.")
 
     # Write app.js
     app_js_content = """// Main Application Logic for Interactive Examination Reader
 document.addEventListener('DOMContentLoaded', () => {
-    // --- SIMPLE CONDITIONAL AUTHENTICATION MODULE ---
-    const authOverlay = document.getElementById('login-overlay');
-    const loginForm = document.getElementById('login-form');
-    const loginError = document.getElementById('login-error');
-    const authEmailInput = document.getElementById('auth-email');
-    const authPasswordInput = document.getElementById('auth-password');
-    const togglePwdBtn = document.getElementById('toggle-pwd-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    // Password visibility toggle
-    if (togglePwdBtn && authPasswordInput) {
-        togglePwdBtn.addEventListener('click', () => {
-            const isPwd = authPasswordInput.type === 'password';
-            authPasswordInput.type = isPwd ? 'text' : 'password';
-            togglePwdBtn.textContent = isPwd ? '🙈' : '👁️';
-        });
-    }
-
-    function cleanStr(str) {
-        return (str || '').replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '').trim();
-    }
-
-    function checkExistingAuth() {
-        const token = sessionStorage.getItem('sa_math_auth_session') || localStorage.getItem('sa_math_auth_session');
-        if (token) {
-            unlockReader();
-            return true;
-        }
-        lockReader();
-        return false;
-    }
-
-    function lockReader() {
-        document.body.classList.add('auth-locked');
-        if (authOverlay) authOverlay.style.display = 'flex';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-    }
-
-    function unlockReader() {
-        document.body.classList.remove('auth-locked');
-        if (authOverlay) authOverlay.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'flex';
-    }
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (loginError) loginError.style.display = 'none';
-
-            const email = cleanStr(authEmailInput ? authEmailInput.value : '').toLowerCase();
-            const pwd = cleanStr(authPasswordInput ? authPasswordInput.value : '').replace(/\\s+/g, '').toLowerCase();
-
-            const allowedEmails = [
-                atob('Ym9tbWFtYW5pc2hhMUBnbWFpbC5jb20='),
-                atob('c3Zpc2hudTA1NDRAZ21haWwuY29t')
-            ];
-            const allowedKey = atob('c2FyaXRoYXJhdmk=');
-
-            if (allowedEmails.includes(email) && pwd === allowedKey) {
-                sessionStorage.setItem('sa_math_auth_session', 'authorized');
-                localStorage.setItem('sa_math_auth_session', 'authorized');
-                unlockReader();
-            } else {
-                if (loginError) {
-                    loginError.textContent = 'Invalid credentials. Access restricted to authorized person.';
-                    loginError.style.display = 'flex';
-                }
-                if (authPasswordInput) {
-                    authPasswordInput.focus();
-                }
-            }
-        });
-    }
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            sessionStorage.removeItem('sa_math_auth_session');
-            localStorage.removeItem('sa_math_auth_session');
-            lockReader();
-            if (authEmailInput) authEmailInput.value = '';
-            if (authPasswordInput) authPasswordInput.value = '';
-        });
-    }
-
-    // Check auth on load
-    checkExistingAuth();
-
     // --- MAIN READER LOGIC ---
     let currentTab = 'mock-tests';
     let currentMockId = 1;
@@ -1091,9 +824,9 @@ document.addEventListener('DOMContentLoaded', () => {
 """
     with open(os.path.join(BASE_DIR, "app.js"), "w", encoding="utf-8") as f:
         f.write(app_js_content)
-    print("app.js written with SHA-256 authentication logic.")
+    print("app.js written successfully.")
 
-    # Write index.html with inline critical modal styling
+    # Write index.html
     index_html = """<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -1104,269 +837,9 @@ document.addEventListener('DOMContentLoaded', () => {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261013">
-  <style>
-    body.auth-locked .main-layout,
-    body.auth-locked .reader-header {
-      filter: blur(18px) !important;
-      pointer-events: none !important;
-      user-select: none !important;
-    }
-    #login-overlay {
-      display: none;
-      position: fixed !important;
-      top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-      width: 100vw !important; height: 100vh !important;
-      z-index: 99999 !important;
-      background: rgba(10, 15, 29, 0.96) !important;
-      backdrop-filter: blur(32px) !important;
-      -webkit-backdrop-filter: blur(32px) !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 24px !important;
-    }
-    body.auth-locked #login-overlay {
-      display: flex !important;
-    }
-    .login-card {
-      background: #111827 !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
-      border-radius: 20px !important;
-      padding: 40px !important;
-      max-width: 440px !important;
-      width: 100% !important;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7) !important;
-      position: relative !important;
-      overflow: hidden !important;
-      font-family: 'Inter', -apple-system, sans-serif !important;
-    }
-    .login-card::before {
-      content: '' !important;
-      position: absolute !important;
-      top: 0 !important; left: 0 !important; right: 0 !important; height: 4px !important;
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%) !important;
-    }
-    .login-badge {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      background: rgba(59, 130, 246, 0.12) !important;
-      color: #60a5fa !important;
-      border: 1px solid rgba(59, 130, 246, 0.3) !important;
-      padding: 5px 12px !important;
-      border-radius: 9999px !important;
-      font-size: 12px !important;
-      font-weight: 600 !important;
-      margin-bottom: 16px !important;
-    }
-    .login-title {
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 24px !important;
-      font-weight: 700 !important;
-      margin-bottom: 8px !important;
-      color: #ffffff !important;
-    }
-    .login-desc {
-      font-size: 13.5px !important;
-      color: #94a3b8 !important;
-      margin-bottom: 24px !important;
-      line-height: 1.5 !important;
-    }
-    .form-group {
-      margin-bottom: 18px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 6px !important;
-    }
-    .form-label {
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: #94a3b8 !important;
-    }
-    .form-input {
-      background: #1a2438 !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
-      color: #ffffff !important;
-      padding: 12px 14px !important;
-      border-radius: 10px !important;
-      font-size: 14px !important;
-      outline: none !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .form-input:focus {
-      border-color: #3b82f6 !important;
-      background: #202d46 !important;
-    }
-    .password-wrapper {
-      position: relative !important;
-      display: flex !important;
-      align-items: center !important;
-      width: 100% !important;
-    }
-    .pwd-eye-btn {
-      position: absolute !important;
-      right: 12px !important;
-      background: transparent !important;
-      border: none !important;
-      color: #94a3b8 !important;
-      cursor: pointer !important;
-      font-size: 16px !important;
-      padding: 4px !important;
-    }
-    .login-error-msg {
-      background: rgba(244, 63, 94, 0.15) !important;
-      border: 1px solid rgba(244, 63, 94, 0.3) !important;
-      color: #fb7185 !important;
-      padding: 10px 14px !important;
-      border-radius: 8px !important;
-      font-size: 13px !important;
-      margin-bottom: 16px !important;
-      display: flex !important;
-      align-items: center !important;
-    }
-    .login-btn {
-      width: 100% !important;
-      padding: 13px !important;
-      border-radius: 10px !important;
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%) !important;
-      border: none !important;
-      color: #ffffff !important;
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 15px !important;
-      font-weight: 700 !important;
-      cursor: pointer !important;
-      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4) !important;
-    }
-    .login-footer {
-      margin-top: 20px !important;
-      text-align: center !important;
-      font-size: 11.5px !important;
-      color: #64748b !important;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css?v=20261013c">
 </head>
-<body class="auth-locked">
-
-  <!-- Secure Login Overlay Modal -->
-  <div id="login-overlay">
-    <div class="login-card">
-      <div class="login-badge">🔒 Restricted Reader Access</div>
-      <h2 class="login-title">Sign In to Continue</h2>
-      <p class="login-desc">Please enter your authorized credentials to access the 200 full-length mock tests and comprehensive preparation materials.</p>
-      
-      <form id="login-form" onsubmit="return handleReaderLogin(event);">
-        <div class="form-group">
-          <label class="form-label" for="auth-email">Authorized Email</label>
-          <input type="email" id="auth-email" class="form-input" placeholder="Enter your email" required autocomplete="username">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="auth-password">Password</label>
-          <div class="password-wrapper">
-            <input type="password" id="auth-password" class="form-input" placeholder="Enter password" required autocomplete="current-password">
-            <button type="button" id="toggle-pwd-btn" class="pwd-eye-btn" title="Toggle visibility">👁️</button>
-          </div>
-        </div>
-
-        <div id="login-error" class="login-error-msg" style="display:none;"></div>
-
-        <button type="submit" class="login-btn">
-          Sign In & Unlock Reader
-        </button>
-      </form>
-
-      <div class="login-footer">
-        School Assistant (Mathematics) Repository • Secure Client Session
-      </div>
-    </div>
-  </div>
-
-  <script>
-    (function() {
-      // Basic conditional check without complex crypto
-      const VALID_EMAILS = [
-        atob('Ym9tbWFtYW5pc2hhMUBnbWFpbC5jb20='), // authorized user
-        atob('c3Zpc2hudTA1NDRAZ21haWwuY29t')     // repo owner
-      ];
-      const VALID_KEY = atob('c2FyaXRoYXJhdmk='); // normalized key (saritharavi)
-
-      function cleanInput(str) {
-        return (str || '').replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '').trim();
-      }
-
-      window.handleReaderLogin = function(e) {
-        if (e && e.preventDefault) e.preventDefault();
-        const emailInput = document.getElementById('auth-email');
-        const pwdInput = document.getElementById('auth-password');
-        const errBox = document.getElementById('login-error');
-
-        const email = cleanInput(emailInput ? emailInput.value : '').toLowerCase();
-        // remove whitespace and lowercase to make it completely forgiving of spaces or casing
-        const pwd = cleanInput(pwdInput ? pwdInput.value : '').replace(/\\s+/g, '').toLowerCase();
-
-        if (VALID_EMAILS.includes(email) && pwd === VALID_KEY) {
-          sessionStorage.setItem('sa_math_auth_session', 'authorized');
-          localStorage.setItem('sa_math_auth_session', 'authorized');
-          document.body.classList.remove('auth-locked');
-          const overlay = document.getElementById('login-overlay');
-          if (overlay) overlay.style.display = 'none';
-          const logoutBtn = document.getElementById('logout-btn');
-          if (logoutBtn) logoutBtn.style.display = 'flex';
-          if (errBox) errBox.style.display = 'none';
-          return false;
-        } else {
-          if (errBox) {
-            errBox.textContent = 'Invalid credentials. Access restricted to authorized person.';
-            errBox.style.display = 'flex';
-          }
-          return false;
-        }
-      };
-
-      window.handleReaderLogout = function() {
-        sessionStorage.removeItem('sa_math_auth_session');
-        localStorage.removeItem('sa_math_auth_session');
-        document.body.classList.add('auth-locked');
-        const overlay = document.getElementById('login-overlay');
-        if (overlay) overlay.style.display = 'flex';
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) logoutBtn.style.display = 'none';
-      };
-
-      // Check existing session immediately on parse
-      const session = sessionStorage.getItem('sa_math_auth_session') || localStorage.getItem('sa_math_auth_session');
-      if (session) {
-        document.body.classList.remove('auth-locked');
-      }
-
-      // DOM setup for toggle pwd & logout
-      document.addEventListener('DOMContentLoaded', function() {
-        const toggleBtn = document.getElementById('toggle-pwd-btn');
-        const pwdInput = document.getElementById('auth-password');
-        if (toggleBtn && pwdInput) {
-          toggleBtn.addEventListener('click', function() {
-            const isPwd = pwdInput.type === 'password';
-            pwdInput.type = isPwd ? 'text' : 'password';
-            toggleBtn.textContent = isPwd ? '🙈' : '👁️';
-          });
-        }
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-          logoutBtn.addEventListener('click', window.handleReaderLogout);
-          if (session) logoutBtn.style.display = 'flex';
-        }
-        const form = document.getElementById('login-form');
-        if (form) {
-          form.onsubmit = window.handleReaderLogin;
-        }
-        if (session) {
-          const overlay = document.getElementById('login-overlay');
-          if (overlay) overlay.style.display = 'none';
-        }
-      });
-    })();
-  </script>
+<body>
 
   <!-- Top App Header -->
   <header class="reader-header">
@@ -1393,9 +866,6 @@ document.addEventListener('DOMContentLoaded', () => {
       <a href="https://github.com/svishnu0544-VR54/school-assistant-mathematics" target="_blank" class="theme-toggle-btn" style="text-decoration:none;">
         GitHub Repo
       </a>
-      <button class="theme-toggle-btn logout-btn" id="logout-btn" style="display:none;">
-        🔒 Sign Out
-      </button>
     </div>
   </header>
 
@@ -1412,14 +882,14 @@ document.addEventListener('DOMContentLoaded', () => {
     </main>
   </div>
 
-  <script src="data.js?v=20261013b"></script>
-  <script src="app.js?v=20261013b"></script>
+  <script src="data.js?v=20261013c"></script>
+  <script src="app.js?v=20261013c"></script>
 </body>
 </html>
 """
     with open(os.path.join(BASE_DIR, "index.html"), "w", encoding="utf-8") as f:
         f.write(index_html)
-    print("index.html written with login overlay.")
+    print("index.html written successfully.")
 
 if __name__ == "__main__":
     main()
