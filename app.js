@@ -1,6 +1,6 @@
 // Main Application Logic for Interactive Examination Reader
 document.addEventListener('DOMContentLoaded', () => {
-    // --- AUTHENTICATION MODULE (Zero Plaintext Stored) ---
+    // --- SIMPLE CONDITIONAL AUTHENTICATION MODULE ---
     const authOverlay = document.getElementById('login-overlay');
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
@@ -18,15 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // SHA-256 helper
-    async function computeSha256(str) {
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    function cleanStr(str) {
+        return (str || '').replace(/[​-‍﻿ ]/g, '').trim();
     }
 
     function checkExistingAuth() {
         const token = sessionStorage.getItem('sa_math_auth_session') || localStorage.getItem('sa_math_auth_session');
-        if (token === window.READER_DATA.authConfig.targetHash) {
+        if (token) {
             unlockReader();
             return true;
         }
@@ -47,28 +45,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            loginError.style.display = 'none';
+            if (loginError) loginError.style.display = 'none';
 
-            const email = authEmailInput.value.trim().toLowerCase();
-            const pwd = authPasswordInput.value.trim();
-            const salt = window.READER_DATA.authConfig.salt;
-            const target = window.READER_DATA.authConfig.targetHash;
+            const email = cleanStr(authEmailInput ? authEmailInput.value : '').toLowerCase();
+            const pwd = cleanStr(authPasswordInput ? authPasswordInput.value : '').replace(/\s+/g, '').toLowerCase();
 
-            const combined = `${email}:${pwd}:${salt}`;
-            const hashed = await computeSha256(combined);
+            const allowedEmails = [
+                atob('Ym9tbWFtYW5pc2hhMUBnbWFpbC5jb20='),
+                atob('c3Zpc2hudTA1NDRAZ21haWwuY29t')
+            ];
+            const allowedKey = atob('c2FyaXRoYXJhdmk=');
 
-            if (hashed === target) {
-                // Successful verification
-                sessionStorage.setItem('sa_math_auth_session', target);
-                localStorage.setItem('sa_math_auth_session', target);
+            if (allowedEmails.includes(email) && pwd === allowedKey) {
+                sessionStorage.setItem('sa_math_auth_session', 'authorized');
+                localStorage.setItem('sa_math_auth_session', 'authorized');
                 unlockReader();
             } else {
-                loginError.textContent = 'Invalid credentials. Access restricted to authorized person.';
-                loginError.style.display = 'flex';
-                authPasswordInput.value = '';
-                authPasswordInput.focus();
+                if (loginError) {
+                    loginError.textContent = 'Invalid credentials. Access restricted to authorized person.';
+                    loginError.style.display = 'flex';
+                }
+                if (authPasswordInput) {
+                    authPasswordInput.focus();
+                }
             }
         });
     }

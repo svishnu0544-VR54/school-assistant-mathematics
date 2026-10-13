@@ -156,7 +156,7 @@
       <h2 class="login-title">Sign In to Continue</h2>
       <p class="login-desc">Please enter your authorized credentials to access the 200 full-length mock tests and comprehensive preparation materials.</p>
       
-      <form id="login-form">
+      <form id="login-form" onsubmit="return handleReaderLogin(event);">
         <div class="form-group">
           <label class="form-label" for="auth-email">Authorized Email</label>
           <input type="email" id="auth-email" class="form-input" placeholder="Enter your email" required autocomplete="username">
@@ -182,6 +182,92 @@
       </div>
     </div>
   </div>
+
+  <script>
+    (function() {
+      // Basic conditional check without complex crypto
+      const VALID_EMAILS = [
+        atob('Ym9tbWFtYW5pc2hhMUBnbWFpbC5jb20='), // authorized user
+        atob('c3Zpc2hudTA1NDRAZ21haWwuY29t')     // repo owner
+      ];
+      const VALID_KEY = atob('c2FyaXRoYXJhdmk='); // normalized key (saritharavi)
+
+      function cleanInput(str) {
+        return (str || '').replace(/[​-‍﻿ ]/g, '').trim();
+      }
+
+      window.handleReaderLogin = function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const emailInput = document.getElementById('auth-email');
+        const pwdInput = document.getElementById('auth-password');
+        const errBox = document.getElementById('login-error');
+
+        const email = cleanInput(emailInput ? emailInput.value : '').toLowerCase();
+        // remove whitespace and lowercase to make it completely forgiving of spaces or casing
+        const pwd = cleanInput(pwdInput ? pwdInput.value : '').replace(/\s+/g, '').toLowerCase();
+
+        if (VALID_EMAILS.includes(email) && pwd === VALID_KEY) {
+          sessionStorage.setItem('sa_math_auth_session', 'authorized');
+          localStorage.setItem('sa_math_auth_session', 'authorized');
+          document.body.classList.remove('auth-locked');
+          const overlay = document.getElementById('login-overlay');
+          if (overlay) overlay.style.display = 'none';
+          const logoutBtn = document.getElementById('logout-btn');
+          if (logoutBtn) logoutBtn.style.display = 'flex';
+          if (errBox) errBox.style.display = 'none';
+          return false;
+        } else {
+          if (errBox) {
+            errBox.textContent = 'Invalid credentials. Access restricted to authorized person.';
+            errBox.style.display = 'flex';
+          }
+          return false;
+        }
+      };
+
+      window.handleReaderLogout = function() {
+        sessionStorage.removeItem('sa_math_auth_session');
+        localStorage.removeItem('sa_math_auth_session');
+        document.body.classList.add('auth-locked');
+        const overlay = document.getElementById('login-overlay');
+        if (overlay) overlay.style.display = 'flex';
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) logoutBtn.style.display = 'none';
+      };
+
+      // Check existing session immediately on parse
+      const session = sessionStorage.getItem('sa_math_auth_session') || localStorage.getItem('sa_math_auth_session');
+      if (session) {
+        document.body.classList.remove('auth-locked');
+      }
+
+      // DOM setup for toggle pwd & logout
+      document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggle-pwd-btn');
+        const pwdInput = document.getElementById('auth-password');
+        if (toggleBtn && pwdInput) {
+          toggleBtn.addEventListener('click', function() {
+            const isPwd = pwdInput.type === 'password';
+            pwdInput.type = isPwd ? 'text' : 'password';
+            toggleBtn.textContent = isPwd ? '🙈' : '👁️';
+          });
+        }
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', window.handleReaderLogout);
+          if (session) logoutBtn.style.display = 'flex';
+        }
+        const form = document.getElementById('login-form');
+        if (form) {
+          form.onsubmit = window.handleReaderLogin;
+        }
+        if (session) {
+          const overlay = document.getElementById('login-overlay');
+          if (overlay) overlay.style.display = 'none';
+        }
+      });
+    })();
+  </script>
 
   <!-- Top App Header -->
   <header class="reader-header">
@@ -227,7 +313,7 @@
     </main>
   </div>
 
-  <script src="data.js?v=20261013"></script>
-  <script src="app.js?v=20261013"></script>
+  <script src="data.js?v=20261013b"></script>
+  <script src="app.js?v=20261013b"></script>
 </body>
 </html>
