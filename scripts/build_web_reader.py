@@ -1113,6 +1113,7 @@ document.addEventListener('DOMContentLoaded', () => {
       user-select: none !important;
     }
     #login-overlay {
+      display: none;
       position: fixed !important;
       top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
       width: 100vw !important; height: 100vh !important;
@@ -1120,10 +1121,12 @@ document.addEventListener('DOMContentLoaded', () => {
       background: rgba(10, 15, 29, 0.96) !important;
       backdrop-filter: blur(32px) !important;
       -webkit-backdrop-filter: blur(32px) !important;
-      display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       padding: 24px !important;
+    }
+    body.auth-locked #login-overlay {
+      display: flex !important;
     }
     .login-card {
       background: #111827 !important;
