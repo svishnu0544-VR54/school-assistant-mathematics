@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTab = 'mock-tests';
     let currentMockId = 1;
     let currentSectionFilter = 'ALL';
-    let studyMode = true; // true = show answers directly, false = exam test mode
     let currentStudyDoc = Object.keys(window.READER_DATA.studyResources)[0] || '';
 
     const tabBtns = document.querySelectorAll('.nav-tab');
@@ -84,14 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="Mathematics Content">Part III: Math Content (44 Qs)</option>
                         <option value="Teaching Methodology">Part IV: Pedagogy (16 Qs)</option>
                     </select>
-                    <button class="btn-secondary" onclick="window.toggleStudyMode()">
-                        ${studyMode ? '📖 Reader Mode (Keys Shown)' : '✍️ Practice Test Mode'}
-                    </button>
                     <a href="mock_tests/Mock_Test_${pad}/questions.pdf" download class="btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
                         📥 Download PDF
                     </a>
                 </div>
             </div>
+            <p style="color:var(--text-secondary); font-size:13px; margin-bottom:20px;">💡 Click on an option to reveal the correct answer and explanation.</p>
             <div id="questions-container"><p style="color:var(--text-secondary);">Loading questions...</p></div>
         `;
 
@@ -103,10 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderQuestionsCards(window.currentLoadedQuestions);
     };
 
-    window.toggleStudyMode = function() {
-        studyMode = !studyMode;
-        renderMockTestContent(currentMockId);
-    };
+    // studyMode removed — answers always revealed on option click
 
     function loadMockQuestions(num) {
         const pad = String(num).padStart(3, '0');
@@ -191,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filtered.forEach(q => {
             const badgeClass = q.diff === 'Easy' ? 'badge-green' : (q.diff === 'Medium' ? 'badge-blue' : 'badge-amber');
             html += `
-                <div class="question-card" id="q-card-${q.qno}">
+                <div class="question-card" id="q-card-${q.qno}" data-answered="false">
                     <div class="question-card-header">
                         <div style="display:flex; gap:8px; align-items:center;">
                             <span class="badge badge-purple">Q${q.qno}</span>
@@ -201,37 +195,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="question-title">${q.text}</div>
                     <div class="options-grid">
-                        <div class="option-item ${studyMode && q.correct === 'A' ? 'is-correct' : ''}" onclick="window.selectOption(${q.qno}, 'A')">
+                        <div class="option-item" onclick="window.selectOption(${q.qno}, 'A')">
                             <strong>(A)</strong> <span>${q.opt_a}</span>
                         </div>
-                        <div class="option-item ${studyMode && q.correct === 'B' ? 'is-correct' : ''}" onclick="window.selectOption(${q.qno}, 'B')">
+                        <div class="option-item" onclick="window.selectOption(${q.qno}, 'B')">
                             <strong>(B)</strong> <span>${q.opt_b}</span>
                         </div>
-                        <div class="option-item ${studyMode && q.correct === 'C' ? 'is-correct' : ''}" onclick="window.selectOption(${q.qno}, 'C')">
+                        <div class="option-item" onclick="window.selectOption(${q.qno}, 'C')">
                             <strong>(C)</strong> <span>${q.opt_c}</span>
                         </div>
-                        <div class="option-item ${studyMode && q.correct === 'D' ? 'is-correct' : ''}" onclick="window.selectOption(${q.qno}, 'D')">
+                        <div class="option-item" onclick="window.selectOption(${q.qno}, 'D')">
                             <strong>(D)</strong> <span>${q.opt_d}</span>
                         </div>
                     </div>
-                    <div class="explanation-box" style="${studyMode ? '' : 'display:none;'}" id="exp-${q.qno}">
+                    <div class="explanation-box" style="display:none;" id="exp-${q.qno}">
                         <strong>Key: Option (${q.correct})</strong><br>
                         <em>Explanation:</em> ${q.exp}
                     </div>
-                    ${!studyMode ? `<button class="btn-secondary" style="margin-top:8px;" onclick="document.getElementById('exp-${q.qno}').style.display='block'">Show Explanation</button>` : ''}
                 </div>
             `;
         });
         container.innerHTML = html;
+        renderMath();
     }
 
     window.selectOption = function(qno, opt) {
-        if (studyMode) return;
+        const card = document.getElementById(`q-card-${qno}`);
+        // If already answered, ignore further clicks
+        if (card.dataset.answered === 'true') return;
+        card.dataset.answered = 'true';
+
         const q = window.currentLoadedQuestions.find(item => item.qno == qno);
         if (!q) return;
-        const card = document.getElementById(`q-card-${qno}`);
         const opts = card.querySelectorAll('.option-item');
-        opts.forEach(el => el.classList.remove('selected-correct', 'selected-wrong'));
+        // Disable hover effect on all options after answering
+        opts.forEach(el => el.style.cursor = 'default');
         
         const idx = opt === 'A' ? 0 : (opt === 'B' ? 1 : (opt === 'C' ? 2 : 3));
         if (opt === q.correct) {
@@ -267,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderStudyNoteContent(docKey) {
         const mdText = window.READER_DATA.studyResources[docKey] || '# Document not found';
         contentArea.innerHTML = `<div class="markdown-view">${simpleMarkdownToHtml(mdText)}</div>`;
+        renderMath();
     }
 
     // --- SYLLABUS VIEW ---
@@ -275,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <p style="padding:10px; font-size:13px; color:var(--text-secondary);">Official 80-mark curriculum with 27 subtopic units mapped.</p>`;
         const mdText = window.READER_DATA.syllabusTranscription || '# Syllabus';
         contentArea.innerHTML = `<div class="markdown-view">${simpleMarkdownToHtml(mdText)}</div>`;
+        renderMath();
     }
 
     // --- PAST PAPERS VIEW ---
@@ -298,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.showPastPaper = function(pKey) {
         const mdText = window.READER_DATA.pastPapers[pKey] || '# Paper not found';
         contentArea.innerHTML = `<div class="markdown-view">${simpleMarkdownToHtml(mdText)}</div>`;
+        renderMath();
     };
 
     // --- DOWNLOADS & OVERVIEW VIEW ---
@@ -332,10 +333,27 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/^# (.*$)/gim, '<h1>$1</h1>')
             .replace(/^## (.*$)/gim, '<h2>$1</h2>')
             .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-            .replace(/^\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
-            .replace(/^\*(.*?)\*/gim, '<em>$1</em>')
+            .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+            .replace(/^- (.*$)/gim, '<li>$1</li>')
+            .replace(/(<li>.*<\/li>)/gims, '<ul>$1</ul>')
             .replace(/\n\n/gim, '<br><br>');
         return html;
+    }
+
+    // Render LaTeX math using KaTeX auto-render
+    function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(contentArea, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
     }
 
     // Initial render
