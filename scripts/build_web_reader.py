@@ -1092,7 +1092,7 @@ document.addEventListener('DOMContentLoaded', () => {
         f.write(app_js_content)
     print("app.js written with SHA-256 authentication logic.")
 
-    # Write index.html
+    # Write index.html with inline critical modal styling
     index_html = """<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -1103,7 +1103,144 @@ document.addEventListener('DOMContentLoaded', () => {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261013">
+  <style>
+    body.auth-locked .main-layout,
+    body.auth-locked .reader-header {
+      filter: blur(18px) !important;
+      pointer-events: none !important;
+      user-select: none !important;
+    }
+    #login-overlay {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      width: 100vw !important; height: 100vh !important;
+      z-index: 99999 !important;
+      background: rgba(10, 15, 29, 0.96) !important;
+      backdrop-filter: blur(32px) !important;
+      -webkit-backdrop-filter: blur(32px) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 24px !important;
+    }
+    .login-card {
+      background: #111827 !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 20px !important;
+      padding: 40px !important;
+      max-width: 440px !important;
+      width: 100% !important;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+    }
+    .login-card::before {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important; left: 0 !important; right: 0 !important; height: 4px !important;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%) !important;
+    }
+    .login-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      background: rgba(59, 130, 246, 0.12) !important;
+      color: #60a5fa !important;
+      border: 1px solid rgba(59, 130, 246, 0.3) !important;
+      padding: 5px 12px !important;
+      border-radius: 9999px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      margin-bottom: 16px !important;
+    }
+    .login-title {
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      margin-bottom: 8px !important;
+      color: #ffffff !important;
+    }
+    .login-desc {
+      font-size: 13.5px !important;
+      color: #94a3b8 !important;
+      margin-bottom: 24px !important;
+      line-height: 1.5 !important;
+    }
+    .form-group {
+      margin-bottom: 18px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 6px !important;
+    }
+    .form-label {
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #94a3b8 !important;
+    }
+    .form-input {
+      background: #1a2438 !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #ffffff !important;
+      padding: 12px 14px !important;
+      border-radius: 10px !important;
+      font-size: 14px !important;
+      outline: none !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .form-input:focus {
+      border-color: #3b82f6 !important;
+      background: #202d46 !important;
+    }
+    .password-wrapper {
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      width: 100% !important;
+    }
+    .pwd-eye-btn {
+      position: absolute !important;
+      right: 12px !important;
+      background: transparent !important;
+      border: none !important;
+      color: #94a3b8 !important;
+      cursor: pointer !important;
+      font-size: 16px !important;
+      padding: 4px !important;
+    }
+    .login-error-msg {
+      background: rgba(244, 63, 94, 0.15) !important;
+      border: 1px solid rgba(244, 63, 94, 0.3) !important;
+      color: #fb7185 !important;
+      padding: 10px 14px !important;
+      border-radius: 8px !important;
+      font-size: 13px !important;
+      margin-bottom: 16px !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+    .login-btn {
+      width: 100% !important;
+      padding: 13px !important;
+      border-radius: 10px !important;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%) !important;
+      border: none !important;
+      color: #ffffff !important;
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4) !important;
+    }
+    .login-footer {
+      margin-top: 20px !important;
+      text-align: center !important;
+      font-size: 11.5px !important;
+      color: #64748b !important;
+    }
+  </style>
 </head>
 <body class="auth-locked">
 
@@ -1185,8 +1322,8 @@ document.addEventListener('DOMContentLoaded', () => {
     </main>
   </div>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <script src="data.js?v=20261013"></script>
+  <script src="app.js?v=20261013"></script>
 </body>
 </html>
 """
